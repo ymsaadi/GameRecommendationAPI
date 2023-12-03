@@ -1,12 +1,11 @@
 package com.ymsaadi.gamerecommendationapi.controllers;
 
 import com.ymsaadi.gamerecommendationapi.models.Game;
+import com.ymsaadi.gamerecommendationapi.models.PaginationResponse;
 import com.ymsaadi.gamerecommendationapi.services.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,7 +16,21 @@ public class GameController {
     private final GameService gameService;
 
     @GetMapping("")
-    public ResponseEntity<List<Game>> getAllGames() {
-        return gameService.getGames();
+    public ResponseEntity<PaginationResponse<Game>> getGames(@RequestParam(defaultValue = "1") Integer pageNumber,
+                                                                   @RequestParam(defaultValue = "20") Integer perPage) {
+        return ResponseEntity.ok(gameService.getGames(pageNumber, perPage));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Game> getGameById(@PathVariable String id) {
+        return gameService.getGameById(id);
+    }
+
+    @GetMapping("/raw")
+    public ResponseEntity<List<Game>> getGamesByString(@RequestParam String s) {
+        ResponseEntity<List<Game>> g = gameService.getGamesByString(s);
+        System.out.println("controller");
+        System.out.println(g);
+        return g;
     }
 }
