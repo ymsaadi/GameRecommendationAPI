@@ -17,8 +17,10 @@ public class GameController {
 
     @GetMapping("")
     public ResponseEntity<PaginationResponse<Game>> getGames(@RequestParam(defaultValue = "1") Integer pageNumber,
-                                                                   @RequestParam(defaultValue = "20") Integer perPage) {
-        return ResponseEntity.ok(gameService.getGames(pageNumber, perPage));
+                                                             @RequestParam(defaultValue = "20") Integer perPage,
+                                                             @RequestParam(defaultValue = "") String sortBy,
+                                                             @RequestParam(defaultValue = "asc") String sortDir) {
+        return ResponseEntity.ok(gameService.getGames(pageNumber, perPage, sortBy, sortDir));
     }
 
     @GetMapping("/{id}")

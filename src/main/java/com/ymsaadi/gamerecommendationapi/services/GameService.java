@@ -18,10 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GameService {
 
-    public PaginationResponse<Game> getGames(Integer pageNumber, Integer perPage) {
+    public PaginationResponse<Game> getGames(Integer pageNumber, Integer perPage, String sortBy, String sortDir) {
         Integer offset = perPage * pageNumber - perPage;
         String stringBody = String
-                .format("fields id, cover.*, first_release_date, genres.*, name, slug, summary, url; where category=0; limit %d; offset %d;", perPage, offset);
+                .format("fields id, cover.*, first_release_date, genres.*, name, slug, summary, url; where category=0 & first_release_date != null; limit %d; offset %d; %s",
+                        perPage,
+                        offset,
+                        sortBy.isEmpty() ? "" : "sort " + sortBy + " " + sortDir + ";");
         PaginationDetail paginationDetail = getGamesCount(stringBody).getBody();
         paginationDetail.setPageNumber(pageNumber);
         paginationDetail.setPerPage(perPage);
