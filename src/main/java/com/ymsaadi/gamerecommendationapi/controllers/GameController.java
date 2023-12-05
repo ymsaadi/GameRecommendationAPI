@@ -17,13 +17,9 @@ import java.util.List;
 public class GameController {
     private final GameService gameService;
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<PaginationResponse<Game>> getGames(@Valid GetGamesRequest getGamesRequest) {
-        return ResponseEntity.ok(gameService.getGames(
-                getGamesRequest.pageNumber(),
-                getGamesRequest.perPage(),
-                getGamesRequest.sortBy(),
-                getGamesRequest.sortDir()));
+        return ResponseEntity.ok(gameService.getGames(getGamesRequest));
     }
 
     @GetMapping("/{id}")
@@ -33,9 +29,6 @@ public class GameController {
 
     @GetMapping("/raw")
     public ResponseEntity<List<Game>> getGamesByString(@RequestParam String s) {
-        ResponseEntity<List<Game>> g = gameService.getGamesByString(s);
-        System.out.println("controller");
-        System.out.println(g);
-        return g;
+        return gameService.getGamesByString(s);
     }
 }

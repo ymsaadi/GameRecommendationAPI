@@ -14,6 +14,7 @@ public record Game(
         Instant firstReleaseDate,
         String summary,
         String url,
-        GameCover cover
+        GameCover cover,
+        GameGenre[] genres
 ) {
 }
