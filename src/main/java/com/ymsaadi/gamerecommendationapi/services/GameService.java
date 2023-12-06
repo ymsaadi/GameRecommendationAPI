@@ -6,12 +6,8 @@ import com.ymsaadi.gamerecommendationapi.models.PaginationDetail;
 import com.ymsaadi.gamerecommendationapi.models.PaginationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalTime;
 import java.time.ZoneOffset;
@@ -20,6 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GameService {
+    private final IGDBService igdbService;
 
     public PaginationResponse<Game> getGames(GetGamesRequest getGamesRequest) {
         Integer offset = getGamesRequest.getPerPage() * getGamesRequest.getPageNumber() - getGamesRequest.getPerPage();
@@ -51,28 +48,12 @@ public class GameService {
     }
 
     public ResponseEntity<List<Game>> getGamesByString(String stringBody) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Client-ID", "eihuex4eqir18dy84r9b1axqrnwevm"); // todo hide client-id and token
-        httpHeaders.add("Authorization", "Bearer fwesoqdsr4ey7zofcm8lwcsw4bvfsy");
-        return restTemplate.exchange(
-                "https://api.igdb.com/v4/games",
-                HttpMethod.POST,
-                new HttpEntity<>(stringBody, httpHeaders),
-                new ParameterizedTypeReference<>() {
-                });
+        return igdbService.getListData("https://api.igdb.com/v4/games", stringBody, new ParameterizedTypeReference<>() {
+        });
     }
 
     public ResponseEntity<PaginationDetail> getGamesCount(String stringBody) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Client-ID", "eihuex4eqir18dy84r9b1axqrnwevm"); // todo hide client-id and token
-        httpHeaders.add("Authorization", "Bearer fwesoqdsr4ey7zofcm8lwcsw4bvfsy");
-        return restTemplate.exchange(
-                "https://api.igdb.com/v4/games/count",
-                HttpMethod.POST,
-                new HttpEntity<>(stringBody, httpHeaders),
-                new ParameterizedTypeReference<>() {
-                });
+        return igdbService.getData("https://api.igdb.com/v4/games/count", stringBody, new ParameterizedTypeReference<>() {
+        });
     }
 }
