@@ -7,6 +7,7 @@ import com.ymsaadi.gamerecommendationapi.services.UserReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -30,5 +31,10 @@ public class UserReviewController {
     @PutMapping("/{id}")
     public ResponseEntity<UserReview> updateReview(@PathVariable Integer id, @RequestBody UserReview userReview, @AuthenticationPrincipal User user) {
         return userReviewService.updateReview(id, userReview, user);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteReview(@PathVariable Integer id, @AuthenticationPrincipal User user) {
+        return userReviewService.deleteReview(id, user);
     }
 }

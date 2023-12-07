@@ -1,6 +1,7 @@
 package com.ymsaadi.gamerecommendationapi.services;
 
 import com.ymsaadi.gamerecommendationapi.mappers.UserReviewMapper;
+import com.ymsaadi.gamerecommendationapi.models.Game;
 import com.ymsaadi.gamerecommendationapi.models.GetReviewsRequest;
 import com.ymsaadi.gamerecommendationapi.models.User;
 import com.ymsaadi.gamerecommendationapi.models.UserReview;
@@ -18,9 +19,10 @@ import org.springframework.stereotype.Service;
 public class UserReviewService {
     @Autowired
     UserReviewRepository userReviewRepository;
-
     @Autowired
     UserReviewMapper userReviewMapper;
+    @Autowired
+    GameService gameService;
 
     public ResponseEntity<Page<UserReview>> getAllReviews(GetReviewsRequest getReviewsRequest) {
         if (getReviewsRequest.getUserId() != null && getReviewsRequest.getGameId() != null) {
@@ -40,6 +42,10 @@ public class UserReviewService {
         if (existingReview != null) {
             return updateReview(existingReview.getId(), userReview, user); // If the user already reviewed that game, update the review instead.
         }
+        Game game = gameService.getGameById(userReview.getGameId()).getBody();
+        if (game == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
         userReview.setUser(user);
         UserReview _userReview = userReviewRepository.save(userReview);
         return new ResponseEntity<>(_userReview, HttpStatus.CREATED);
@@ -53,5 +59,14 @@ public class UserReviewService {
         userReviewMapper.updateUserReviewFromDto(userReview, _userReview);
         userReviewRepository.save(_userReview);
         return new ResponseEntity<>(_userReview, HttpStatus.OK);
+    }
+
+    public ResponseEntity<HttpStatus> deleteReview(Integer id, User user) {
+        UserReview userReview = userReviewRepository.findByIdAndUserId(id, user.getId());
+        if (userReview == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userReviewRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

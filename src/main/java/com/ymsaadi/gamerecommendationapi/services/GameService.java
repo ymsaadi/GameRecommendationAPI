@@ -6,6 +6,7 @@ import com.ymsaadi.gamerecommendationapi.models.PaginationDetail;
 import com.ymsaadi.gamerecommendationapi.models.PaginationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -35,14 +36,14 @@ public class GameService {
         return new PaginationResponse<>(paginationDetail, getGamesByString(stringBody).getBody());
     }
 
-    public ResponseEntity<Game> getGameById(String id) {
+    public ResponseEntity<Game> getGameById(Integer id) {
         String bodyString = "fields id, cover.*, first_release_date, genres.*, name, slug, summary, url; where category=0 & id=" + id + ";";
         ResponseEntity<List<Game>> game = getGamesByString(bodyString);
         if (game.getBody() == null) {
             return ResponseEntity.internalServerError().build();
         }
         if (game.getBody().isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(game.getBody().get(0));
     }
