@@ -7,9 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserReviewRepository extends JpaRepository<UserReview, Integer> {
     Page<UserReview> findByGameId(Integer gameId, PageRequest of);
-
     Page<UserReview> findByUserId(Integer userId, PageRequest of);
-
     Page<UserReview> findByUserIdAndGameId(Integer userId, Integer gameId, PageRequest of);
     UserReview findByUserIdAndGameId(Integer userId, Integer gameId);
+    UserReview findByIdAndUserId(Integer Id, Integer userId);
 }
