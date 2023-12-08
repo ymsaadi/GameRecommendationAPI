@@ -52,8 +52,8 @@ public class UserRepositoryTests {
                 .password("123456")
                 .build();
 
-        User savedUser1 = userRepository.save(user1);
-        User savedUser2 = userRepository.save(user2);
+        userRepository.save(user1);
+        userRepository.save(user2);
 
         List<User> userList = userRepository.findAll();
 
