@@ -1,6 +1,5 @@
 package com.ymsaadi.gamerecommendationapi.services;
 
-import com.ymsaadi.gamerecommendationapi.mappers.UserReviewMapper;
 import com.ymsaadi.gamerecommendationapi.models.Game;
 import com.ymsaadi.gamerecommendationapi.models.GetReviewsRequest;
 import com.ymsaadi.gamerecommendationapi.models.User;
@@ -26,8 +25,6 @@ public class UserReviewServiceTests {
     private UserReviewRepository userReviewRepository;
     @Mock
     private GameService gameService;
-    @Mock
-    private UserReviewMapper userReviewMapper;
     @InjectMocks
     private UserReviewService userReviewService;
 
